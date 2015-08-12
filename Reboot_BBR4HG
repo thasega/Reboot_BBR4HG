@@ -1,0 +1,25 @@
+#!/usr/bin/ruby
+
+# Reboot BBR-4HG
+require "selenium-webdriver"
+
+router = "192.168.1.1"
+passwd = "[YOUR PASSWORD]"
+
+driver = Selenium::WebDriver.for :firefox
+driver.manage.timeouts.implicit_wait = 10
+
+driver.navigate.to "http://" + router
+elem_user = driver.find_element(:name, "user")
+elem_pass = driver.find_element(:name, "pws")
+elem_user.send_keys "root"
+elem_pass.send_keys passwd
+elem_pass.submit
+
+driver.navigate.to "http://" + router + "/advance-admin-init.stm"
+driver.switch_to.frame "frame-main"
+elem_act = driver.find_element(:xpath, "/html/body/ul[1]/li/form/p/input")
+elem_act.submit
+
+sleep 1
+driver.quit
